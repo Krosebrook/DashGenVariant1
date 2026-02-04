@@ -1,0 +1,5 @@
+{
+  "name": "DashGen Pro",
+  "description": "A high-fidelity dashboard generator that renders responsive, data-driven UIs from JSON specifications with support for charts, KPIs, filters, and various data sources.",
+  "requestFramePermissions": []
+}

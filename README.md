@@ -1,11 +1,37 @@
-<div align="center">
+# 📊 DashGen Pro
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+**DashGen Pro** is a high-fidelity, schema-driven dashboard generator. It empowers developers and analysts to build enterprise-grade, responsive data visualizations using a simple JSON specification.
 
-  <h1>Built with AI Studio</h2>
+## 🚀 Key Features
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+- **Schema-Driven UI**: Define your entire dashboard in a single JSON file. Validated by Zod for 100% type safety.
+- **Dynamic Data Engine**: Native support for Inline JSON, Remote APIs, and CSV uploads with client-side aggregation and filtering.
+- **Responsive Layouts**: Intelligent grid system that adapts from mobile to 4K displays.
+- **Rich Widget Library**: KPIs, Charts (Line, Bar, Area, Pie), Tables, Timelines, and Alerts.
+- **Theming & Customization**: Built-in support for Dark/Light modes, accent colors, and density controls.
+- **Collaboration Ready**: Generate shareable, base64-encoded URLs for instant dashboard sharing.
+- **Print Optimized**: One-click PDF export with specialized print CSS.
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+## 🛠 Tech Stack
 
-</div>
+- **Framework**: React 19 (ESM)
+- **State Management**: Zustand (Atomic updates)
+- **Validation**: Zod (Runtime schema enforcement)
+- **Visualization**: Recharts (SVG-based responsive charts)
+- **Styling**: Tailwind CSS
+- **Testing**: Vitest (Unit testing)
+
+## 🏁 Quick Start
+
+1. **Browse Templates**: Click the "Templates" button in the header to load a pre-configured dashboard.
+2. **Edit JSON**: Switch to the **EDITOR** tab to modify the specification in real-time.
+3. **Connect Data**: Update the `dataSources` array to point to your own API endpoints or upload a CSV.
+4. **Share**: Click **SHARE** to copy a unique URL to your clipboard.
+
+## 📖 Documentation
+
+- [Specification Guide](./SPECIFICATION.md): Full reference for the DashboardSpec JSON.
+- [Architecture Guide](./ARCHITECTURE.md): Deep dive into the data flow and rendering engine.
+
+---
+Built with ❤️ for High-Performance Data Teams.
