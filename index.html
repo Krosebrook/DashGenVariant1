@@ -18,6 +18,19 @@
         .print-only { display: block !important; }
         .dashboard-container { padding: 0 !important; margin: 0 !important; }
         .card { break-inside: avoid; border: 1px solid #e2e8f0 !important; }
+        
+        /* Isolation logic for Table Widget printing */
+        body.printing-mode > * { display: none !important; }
+        body.printing-mode .print-target { 
+          display: block !important; 
+          position: absolute; 
+          top: 0; 
+          left: 0; 
+          width: 100%; 
+          z-index: 9999;
+          background: white;
+          padding: 20px;
+        }
       }
       /* Custom Scrollbar */
       ::-webkit-scrollbar { width: 8px; height: 8px; }

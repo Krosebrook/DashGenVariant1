@@ -6,7 +6,7 @@ import { z } from 'zod';
 
 type KPIProps = z.infer<typeof KPIWidgetSchema> & { data: any[] };
 
-export const KPIWidget: React.FC<KPIProps> = ({ title, data, field, prefix, suffix, precision = 0 }) => {
+export const KPIWidget: React.FC<KPIProps> = ({ title, data = [], field, prefix, suffix, precision = 0 }) => {
   const value = data.length > 0 ? data[0][field] : 0;
   const formattedValue = typeof value === 'number' 
     ? value.toLocaleString(undefined, { minimumFractionDigits: precision, maximumFractionDigits: precision })

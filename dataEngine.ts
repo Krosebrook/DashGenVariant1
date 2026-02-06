@@ -20,6 +20,19 @@ export function executeQuery(data: any[], query?: Query, filters: Record<string,
       result = result.filter(item => 
         String(item[field]).toLowerCase().includes(String(value).toLowerCase())
       );
+    } else if (filterConfig.type === 'date') {
+      // Expecting value to be { start?: string, end?: string }
+      if (typeof value === 'object') {
+        if (value.start) {
+          result = result.filter(item => new Date(item[field]) >= new Date(value.start));
+        }
+        if (value.end) {
+          result = result.filter(item => new Date(item[field]) <= new Date(value.end));
+        }
+      } else {
+        // Fallback for exact match if single string passed
+        result = result.filter(item => item[field] === value);
+      }
     } else if (filterConfig.type === 'multi-select') {
       if (Array.isArray(value)) {
         result = result.filter(item => value.includes(item[field]));
@@ -94,15 +107,27 @@ export async function resolveDataSource(ds: DataSource): Promise<any[]> {
   if (ds.type === 'csv') {
     if (ds.content) return parseCSV(ds.content);
     if (ds.url) {
-      const resp = await fetch(ds.url);
-      const text = await resp.text();
-      return parseCSV(text);
+      try {
+        const resp = await fetch(ds.url);
+        if (!resp.ok) throw new Error(`CSV fetch failed: ${resp.statusText}`);
+        const text = await resp.text();
+        return parseCSV(text);
+      } catch (e) {
+        console.error(`Failed to load CSV source ${ds.id}`, e);
+        return [];
+      }
     }
   }
 
   if (ds.type === 'api') {
-    const resp = await fetch(ds.url);
-    return await resp.json();
+    try {
+      const resp = await fetch(ds.url);
+      if (!resp.ok) throw new Error(`API fetch failed: ${resp.statusText}`);
+      return await resp.json();
+    } catch (e) {
+      console.error(`Failed to load API source ${ds.id}`, e);
+      return [];
+    }
   }
 
   return [];

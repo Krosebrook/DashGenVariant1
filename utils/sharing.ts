@@ -31,9 +31,12 @@ export function decodeSpec(encoded: string): DashboardSpec | null {
 /**
  * Generates a shareable URL for the current specification.
  */
-export function getShareableUrl(spec: DashboardSpec): string {
+export function getShareableUrl(spec: DashboardSpec, readOnly: boolean = false): string {
   const encoded = encodeSpec(spec);
   const url = new URL(window.location.href);
   url.searchParams.set('spec', encoded);
+  if (readOnly) {
+    url.searchParams.set('viewOnly', 'true');
+  }
   return url.toString();
 }

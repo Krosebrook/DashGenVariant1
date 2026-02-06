@@ -12,7 +12,7 @@ type ChartProps = z.infer<typeof ChartWidgetSchema> & { data: any[], accent?: st
 
 const DEFAULT_COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#6366f1'];
 
-export const ChartWidget: React.FC<ChartProps> = ({ title, chartType, data, xAxis, yAxis, colors, accent }) => {
+export const ChartWidget: React.FC<ChartProps> = ({ title, chartType, data = [], xAxis, yAxis, colors, accent }) => {
   const chartColors = colors || [accent || '#3b82f6', ...DEFAULT_COLORS];
 
   const renderChart = () => {

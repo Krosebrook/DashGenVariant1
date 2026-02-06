@@ -5,6 +5,7 @@ import { executeQuery } from '../dataEngine';
 import { KPIWidget } from './Widgets/KPIWidget';
 import { ChartWidget } from './Widgets/ChartWidget';
 import { TableWidget } from './Widgets/TableWidget';
+import { TimelineWidget } from './Widgets/TimelineWidget';
 import { Widget } from '../types';
 
 export const DashboardRenderer: React.FC = () => {
@@ -24,6 +25,7 @@ export const DashboardRenderer: React.FC = () => {
       case 'kpi': return <KPIWidget key={widget.id} {...widget} data={data} />;
       case 'chart': return <ChartWidget key={widget.id} {...widget} data={data} accent={spec.theme.accent} />;
       case 'table': return <TableWidget key={widget.id} {...widget} data={data} />;
+      case 'timeline': return <TimelineWidget key={widget.id} {...widget} data={data} />;
       case 'alert':
         const severityStyles = {
           info: 'bg-blue-50 text-blue-800 border-blue-200',
@@ -46,21 +48,6 @@ export const DashboardRenderer: React.FC = () => {
           body: 'text-slate-600 leading-relaxed',
         };
         return <div key={widget.id} className={`${variantStyles[widget.variant || 'body']} col-span-full`}>{widget.content}</div>;
-      case 'timeline':
-        return (
-          <div key={widget.id} className="space-y-4 p-4 bg-white border rounded-xl">
-             {data.map((item, i) => (
-               <div key={i} className="flex gap-4 border-l-2 border-slate-200 pl-6 relative">
-                 <div className="absolute w-3 h-3 bg-white border-2 border-blue-500 rounded-full -left-[7.5px] top-1"></div>
-                 <div>
-                    <span className="text-[10px] text-slate-400 block mb-1 uppercase font-bold tracking-wider">{item[widget.dateField]}</span>
-                    <h4 className="font-bold text-slate-900 text-sm">{item[widget.titleField]}</h4>
-                    <p className="text-xs text-slate-500 mt-1">{String(item[widget.descriptionField])}</p>
-                 </div>
-               </div>
-             ))}
-          </div>
-        );
       default: return <div key={widget.id}>Unsupported Widget</div>;
     }
   };
