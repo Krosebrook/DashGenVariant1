@@ -10,11 +10,16 @@ interface DashboardState {
   dataCache: Record<string, any[]>;
   isLoading: boolean;
   isReadOnly: boolean;
+  errors: Record<string, string>;
+  user: { id: number, email: string } | null;
+  token: string | null;
   setSpec: (spec: DashboardSpec) => void;
   setFilter: (id: string, value: any) => void;
   loadData: () => Promise<void>;
   updateInlineData: (dataSourceId: string, newData: any[]) => void;
   setReadOnly: (readOnly: boolean) => void;
+  login: (user: { id: number, email: string }, token: string) => void;
+  logout: () => void;
 }
 
 export const useDashboardStore = create<DashboardState>((set, get) => ({
@@ -23,29 +28,42 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   dataCache: {},
   isLoading: false,
   isReadOnly: false,
+  errors: {},
+  user: null,
+  token: localStorage.getItem('token'),
   setSpec: (spec) => {
-    set({ spec, activeFilters: {}, dataCache: {} });
+    set({ spec, activeFilters: {}, dataCache: {}, errors: {} });
     get().loadData();
   },
   setFilter: (id, value) => set((state) => ({ 
     activeFilters: { ...state.activeFilters, [id]: value } 
   })),
   setReadOnly: (isReadOnly) => set({ isReadOnly }),
+  login: (user, token) => {
+    localStorage.setItem('token', token);
+    set({ user, token });
+  },
+  logout: () => {
+    localStorage.removeItem('token');
+    set({ user: null, token: null });
+  },
   loadData: async () => {
     const { spec } = get();
-    set({ isLoading: true });
+    set({ isLoading: true, errors: {} });
     const newCache: Record<string, any[]> = {};
+    const newErrors: Record<string, string> = {};
     
     await Promise.all(spec.dataSources.map(async (ds) => {
       try {
         newCache[ds.id] = await resolveDataSource(ds);
-      } catch (err) {
+      } catch (err: any) {
         console.error(`Failed to load data source ${ds.id}:`, err);
         newCache[ds.id] = [];
+        newErrors[ds.id] = err.message || 'Failed to load data';
       }
     }));
     
-    set({ dataCache: newCache, isLoading: false });
+    set({ dataCache: newCache, errors: newErrors, isLoading: false });
   },
   updateInlineData: (dataSourceId, newData) => {
     const { spec } = get();

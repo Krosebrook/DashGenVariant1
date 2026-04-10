@@ -8,7 +8,7 @@ export const SALES_TEMPLATE: DashboardSpec = {
     description: 'Executive overview of global revenue streams, product performance, and regional sales vs targets. Features interactive filtering and trend analysis.',
     author: 'Sales Operations'
   },
-  theme: { mode: 'light', accent: '#2563eb', density: 'cozy' },
+  theme: { mode: 'light', accent: '#3b82f6', density: 'cozy' },
   dataSources: [
     {
       id: 'monthly_sales',
@@ -44,9 +44,9 @@ export const SALES_TEMPLATE: DashboardSpec = {
       id: 'summary',
       layout: { columns: { base: 1, md: 3, lg: 3 }, gap: 4 },
       widgets: [
-        { id: 'k1', type: 'kpi', title: 'Total Revenue', field: 'revenue', dataSourceId: 'monthly_sales', query: { aggregate: { revenue: 'sum' } }, prefix: '$' },
-        { id: 'k2', type: 'kpi', title: 'Sales Pipeline Leads', field: 'leads', dataSourceId: 'monthly_sales', query: { aggregate: { leads: 'sum' } } },
-        { id: 'k3', type: 'kpi', title: 'Avg Deal Size', field: 'amount', dataSourceId: 'product_sales', query: { aggregate: { amount: 'avg' } }, prefix: '$', precision: 0 }
+        { id: 'k1', type: 'kpi', precision: 0, title: 'Total Revenue', field: 'revenue', dataSourceId: 'monthly_sales', query: { aggregate: { revenue: 'sum' } }, prefix: '$' },
+        { id: 'k2', type: 'kpi', precision: 0, title: 'Sales Pipeline Leads', field: 'leads', dataSourceId: 'monthly_sales', query: { aggregate: { leads: 'sum' } } },
+        { id: 'k3', type: 'kpi', precision: 0, title: 'Avg Deal Size', field: 'amount', dataSourceId: 'product_sales', query: { aggregate: { amount: 'avg' } }, prefix: '$' }
       ]
     },
     {
@@ -55,7 +55,7 @@ export const SALES_TEMPLATE: DashboardSpec = {
       layout: { columns: { base: 1, md: 1, lg: 2 }, gap: 6 },
       widgets: [
         { id: 'c1', type: 'chart', chartType: 'area', title: 'Revenue vs Target', xAxis: 'month', yAxis: ['revenue', 'target'], dataSourceId: 'monthly_sales', colors: ['#2563eb', '#93c5fd'] },
-        { id: 'c2', type: 'chart', chartType: 'bar', title: 'Leads Generated', xAxis: 'month', yAxis: ['leads'], dataSourceId: 'monthly_sales', accent: '#8b5cf6' }
+        { id: 'c2', type: 'chart', chartType: 'bar', title: 'Leads Generated', xAxis: 'month', yAxis: ['leads'], dataSourceId: 'monthly_sales' }
       ]
     },
     {
@@ -64,7 +64,7 @@ export const SALES_TEMPLATE: DashboardSpec = {
       layout: { columns: { base: 1, md: 1, lg: 2 }, gap: 6 },
       widgets: [
         { id: 'c3', type: 'chart', chartType: 'pie', title: 'Revenue Mix', xAxis: 'product', yAxis: ['amount'], dataSourceId: 'product_sales' },
-        { id: 't1', type: 'table', title: 'Product Breakdown', dataSourceId: 'product_sales', columns: [
+        { id: 't1', type: 'table', pageSize: 10, title: 'Product Breakdown', dataSourceId: 'product_sales', columns: [
           { key: 'product', label: 'Product Name' },
           { key: 'amount', label: 'Revenue', format: 'currency' },
           { key: 'deals', label: 'Deals Closed', format: 'number' },
@@ -82,7 +82,7 @@ export const WEB_TRAFFIC_TEMPLATE: DashboardSpec = {
     description: 'Deep dive into visitor traffic, session trends, device usage, and engagement sources.',
     author: 'Marketing Team'
   },
-  theme: { mode: 'light', accent: '#f59e0b', density: 'comfortable' },
+  theme: { mode: 'light', accent: '#3b82f6', density: 'comfortable' },
   dataSources: [
     {
       id: 'traffic_sources',
@@ -118,15 +118,16 @@ export const WEB_TRAFFIC_TEMPLATE: DashboardSpec = {
       ]
     }
   ],
+  filters: [],
   sections: [
     {
       id: 'overview',
       layout: { columns: { base: 1, md: 4, lg: 4 }, gap: 4 },
       widgets: [
-        { id: 'k1', type: 'kpi', title: 'Total Users', field: 'users', dataSourceId: 'daily_stats', query: { aggregate: { users: 'sum' } } },
-        { id: 'k2', type: 'kpi', title: 'Total Sessions', field: 'sessions', dataSourceId: 'daily_stats', query: { aggregate: { sessions: 'sum' } } },
-        { id: 'k3', type: 'kpi', title: 'Avg Bounce Rate', field: 'bounce', dataSourceId: 'traffic_sources', query: { aggregate: { bounce: 'avg' } }, suffix: '%' },
-        { id: 'k4', type: 'kpi', title: 'Top Source', field: 'visitors', dataSourceId: 'traffic_sources', query: { orderBy: 'visitors', order: 'desc', limit: 1 }, prefix: 'Vol: ' }
+        { id: 'k1', type: 'kpi', precision: 0, title: 'Total Users', field: 'users', dataSourceId: 'daily_stats', query: { aggregate: { users: 'sum' } } },
+        { id: 'k2', type: 'kpi', precision: 0, title: 'Total Sessions', field: 'sessions', dataSourceId: 'daily_stats', query: { aggregate: { sessions: 'sum' } } },
+        { id: 'k3', type: 'kpi', precision: 0, title: 'Avg Bounce Rate', field: 'bounce', dataSourceId: 'traffic_sources', query: { aggregate: { bounce: 'avg' } }, suffix: '%' },
+        { id: 'k4', type: 'kpi', precision: 0, title: 'Top Source', field: 'visitors', dataSourceId: 'traffic_sources', query: { orderBy: 'visitors', order: 'desc', limit: 1 }, prefix: 'Vol: ' }
       ]
     },
     {
@@ -142,7 +143,7 @@ export const WEB_TRAFFIC_TEMPLATE: DashboardSpec = {
       layout: { columns: { base: 1, md: 3, lg: 3 }, gap: 6 },
       widgets: [
         { id: 'c3', type: 'chart', chartType: 'pie', title: 'Device Breakdown', xAxis: 'device', yAxis: ['percentage'], dataSourceId: 'devices' },
-        { id: 't1', type: 'table', title: 'Source Performance', dataSourceId: 'traffic_sources', columns: [
+        { id: 't1', type: 'table', pageSize: 10, title: 'Source Performance', dataSourceId: 'traffic_sources', columns: [
           { key: 'source', label: 'Channel' },
           { key: 'visitors', label: 'Visitors', format: 'number' },
           { key: 'bounce', label: 'Bounce Rate %', format: 'number' }
@@ -159,7 +160,7 @@ export const PROJECT_MGMT_TEMPLATE: DashboardSpec = {
     description: 'Track sprint velocity, task distribution, and upcoming milestones for engineering teams.',
     author: 'PMO'
   },
-  theme: { mode: 'light', accent: '#8b5cf6', density: 'compact' },
+  theme: { mode: 'light', accent: '#3b82f6', density: 'compact' },
   dataSources: [
     {
       id: 'milestones',
@@ -193,6 +194,7 @@ export const PROJECT_MGMT_TEMPLATE: DashboardSpec = {
       ]
     }
   ],
+  filters: [],
   sections: [
     {
       id: 'header',
@@ -205,9 +207,9 @@ export const PROJECT_MGMT_TEMPLATE: DashboardSpec = {
       id: 'kpis',
       layout: { columns: { base: 1, md: 3, lg: 3 }, gap: 4 },
       widgets: [
-        { id: 'k1', type: 'kpi', title: 'Completed Tasks', field: 'count', dataSourceId: 'tasks', query: { where: { status: 'Done' } } },
-        { id: 'k2', type: 'kpi', title: 'Active Tasks', field: 'count', dataSourceId: 'tasks', query: { where: { status: 'In Progress' } } },
-        { id: 'k3', type: 'kpi', title: 'Current Velocity', field: 'points', dataSourceId: 'velocity', query: { orderBy: 'sprint', order: 'desc', limit: 1 }, suffix: ' pts' }
+        { id: 'k1', type: 'kpi', precision: 0, title: 'Completed Tasks', field: 'count', dataSourceId: 'tasks', query: { where: { status: 'Done' } } },
+        { id: 'k2', type: 'kpi', precision: 0, title: 'Active Tasks', field: 'count', dataSourceId: 'tasks', query: { where: { status: 'In Progress' } } },
+        { id: 'k3', type: 'kpi', precision: 0, title: 'Current Velocity', field: 'points', dataSourceId: 'velocity', query: { orderBy: 'sprint', order: 'desc', limit: 1 }, suffix: ' pts' }
       ]
     },
     {
@@ -236,7 +238,7 @@ export const SOCIAL_MEDIA_TEMPLATE: DashboardSpec = {
     description: 'Analyze social presence across platforms. Track reach, impressions, follower growth, and click-through rates.',
     author: 'Social Media Manager'
   },
-  theme: { mode: 'light', accent: '#ec4899', density: 'cozy' },
+  theme: { mode: 'light', accent: '#3b82f6', density: 'cozy' },
   dataSources: [
     {
       id: 'social_metrics',
@@ -249,15 +251,16 @@ export const SOCIAL_MEDIA_TEMPLATE: DashboardSpec = {
       ]
     }
   ],
+  filters: [],
   sections: [
     {
       id: 'top_kpis',
       layout: { columns: { base: 1, md: 4, lg: 4 }, gap: 4 },
       widgets: [
-        { id: 'k1', type: 'kpi', title: 'Total Reach', field: 'reach', dataSourceId: 'social_metrics', query: { aggregate: { reach: 'sum' } } },
-        { id: 'k2', type: 'kpi', title: 'Impressions', field: 'impressions', dataSourceId: 'social_metrics', query: { aggregate: { impressions: 'sum' } } },
-        { id: 'k3', type: 'kpi', title: 'Total Clicks', field: 'clicks', dataSourceId: 'social_metrics', query: { aggregate: { clicks: 'sum' } } },
-        { id: 'k4', type: 'kpi', title: 'Followers', field: 'followers', dataSourceId: 'social_metrics', query: { aggregate: { followers: 'sum' } } }
+        { id: 'k1', type: 'kpi', precision: 0, title: 'Total Reach', field: 'reach', dataSourceId: 'social_metrics', query: { aggregate: { reach: 'sum' } } },
+        { id: 'k2', type: 'kpi', precision: 0, title: 'Impressions', field: 'impressions', dataSourceId: 'social_metrics', query: { aggregate: { impressions: 'sum' } } },
+        { id: 'k3', type: 'kpi', precision: 0, title: 'Total Clicks', field: 'clicks', dataSourceId: 'social_metrics', query: { aggregate: { clicks: 'sum' } } },
+        { id: 'k4', type: 'kpi', precision: 0, title: 'Followers', field: 'followers', dataSourceId: 'social_metrics', query: { aggregate: { followers: 'sum' } } }
       ]
     },
     {
@@ -279,7 +282,7 @@ export const SUPPORT_OPS_TEMPLATE: DashboardSpec = {
     description: 'Monitor support ticket lifecycle, agent performance, and customer satisfaction (CSAT) trends.',
     author: 'Support Lead'
   },
-  theme: { mode: 'light', accent: '#ef4444', density: 'cozy' },
+  theme: { mode: 'light', accent: '#3b82f6', density: 'cozy' },
   dataSources: [
     {
       id: 'tickets',
@@ -292,13 +295,14 @@ export const SUPPORT_OPS_TEMPLATE: DashboardSpec = {
       ]
     }
   ],
+  filters: [],
   sections: [
     {
       id: 'overview',
       layout: { columns: { base: 1, md: 3, lg: 3 }, gap: 4 },
       widgets: [
-        { id: 'k1', type: 'kpi', title: 'Open Tickets', field: 'count', dataSourceId: 'tickets', query: { aggregate: { count: 'sum' } } },
-        { id: 'k2', type: 'kpi', title: 'Avg Resolution (min)', field: 'avg_time', dataSourceId: 'tickets', query: { aggregate: { avg_time: 'avg' } } },
+        { id: 'k1', type: 'kpi', precision: 0, title: 'Open Tickets', field: 'count', dataSourceId: 'tickets', query: { aggregate: { count: 'sum' } } },
+        { id: 'k2', type: 'kpi', precision: 0, title: 'Avg Resolution (min)', field: 'avg_time', dataSourceId: 'tickets', query: { aggregate: { avg_time: 'avg' } } },
         { id: 'k3', type: 'kpi', title: 'CSAT Score', field: 'csat', dataSourceId: 'tickets', query: { aggregate: { csat: 'avg' } }, precision: 1, suffix: '/ 5.0' }
       ]
     },
@@ -320,7 +324,7 @@ export const SAAS_METRICS_TEMPLATE: DashboardSpec = {
     description: 'Track the vital signs of a SaaS business: MRR, Churn rate, LTV, and Active User engagement trends.',
     author: 'Product Management'
   },
-  theme: { mode: 'light', accent: '#10b981', density: 'comfortable' },
+  theme: { mode: 'light', accent: '#3b82f6', density: 'comfortable' },
   dataSources: [
     {
       id: 'metrics',
@@ -333,14 +337,15 @@ export const SAAS_METRICS_TEMPLATE: DashboardSpec = {
       ]
     }
   ],
+  filters: [],
   sections: [
     {
       id: 'kpi_row',
       layout: { columns: { base: 1, md: 3, lg: 3 }, gap: 4 },
       widgets: [
-        { id: 'm1', type: 'kpi', title: 'Annual Run Rate', field: 'mrr', dataSourceId: 'metrics', query: { orderBy: 'date', order: 'desc', limit: 1 }, prefix: '$', precision: 0 },
-        { id: 'm2', type: 'kpi', title: 'Latest Churn', field: 'churn', dataSourceId: 'metrics', query: { orderBy: 'date', order: 'desc', limit: 1 }, suffix: '%' },
-        { id: 'm3', type: 'kpi', title: 'Active Users (DAU)', field: 'dau', dataSourceId: 'metrics', query: { orderBy: 'date', order: 'desc', limit: 1 } }
+        { id: 'm1', type: 'kpi', precision: 0, title: 'Annual Run Rate', field: 'mrr', dataSourceId: 'metrics', query: { orderBy: 'date', order: 'desc', limit: 1 }, prefix: '$' },
+        { id: 'm2', type: 'kpi', precision: 0, title: 'Latest Churn', field: 'churn', dataSourceId: 'metrics', query: { orderBy: 'date', order: 'desc', limit: 1 }, suffix: '%' },
+        { id: 'm3', type: 'kpi', precision: 0, title: 'Active Users (DAU)', field: 'dau', dataSourceId: 'metrics', query: { orderBy: 'date', order: 'desc', limit: 1 } }
       ]
     },
     {
@@ -360,7 +365,7 @@ export const INVENTORY_TEMPLATE: DashboardSpec = {
     description: 'Monitor warehouse stock levels, track low inventory alerts, and analyze category distribution.',
     author: 'Operations'
   },
-  theme: { mode: 'light', accent: '#f97316', density: 'compact' },
+  theme: { mode: 'light', accent: '#3b82f6', density: 'compact' },
   dataSources: [
     {
       id: 'inventory',
@@ -385,14 +390,15 @@ export const INVENTORY_TEMPLATE: DashboardSpec = {
       ]
     }
   ],
+  filters: [],
   sections: [
     {
       id: 'kpis',
       layout: { columns: { base: 1, md: 3, lg: 3 }, gap: 4 },
       widgets: [
-        { id: 'k1', type: 'kpi', title: 'Total Stock Value', field: 'value', dataSourceId: 'inventory', query: { aggregate: { value: 'sum' } }, prefix: '$' },
-        { id: 'k2', type: 'kpi', title: 'Low Stock Items', field: 'item', dataSourceId: 'inventory', query: { where: { category: 'Electronics' }, aggregate: { item: 'count' } } }, 
-        { id: 'k3', type: 'kpi', title: 'Total Items', field: 'stock', dataSourceId: 'inventory', query: { aggregate: { stock: 'sum' } } }
+        { id: 'k1', type: 'kpi', precision: 0, title: 'Total Stock Value', field: 'value', dataSourceId: 'inventory', query: { aggregate: { value: 'sum' } }, prefix: '$' },
+        { id: 'k2', type: 'kpi', precision: 0, title: 'Low Stock Items', field: 'item', dataSourceId: 'inventory', query: { where: { category: 'Electronics' }, aggregate: { item: 'count' } } }, 
+        { id: 'k3', type: 'kpi', precision: 0, title: 'Total Items', field: 'stock', dataSourceId: 'inventory', query: { aggregate: { stock: 'sum' } } }
       ]
     },
     {
@@ -413,7 +419,7 @@ export const CAMPAIGN_TEMPLATE: DashboardSpec = {
     description: 'Track campaign ROI, click-through rates, and conversion costs across active marketing channels.',
     author: 'Marketing'
   },
-  theme: { mode: 'dark', accent: '#d946ef', density: 'cozy' },
+  theme: { mode: 'dark', accent: '#3b82f6', density: 'cozy' },
   dataSources: [
     {
       id: 'campaigns',
@@ -426,14 +432,15 @@ export const CAMPAIGN_TEMPLATE: DashboardSpec = {
       ]
     }
   ],
+  filters: [],
   sections: [
     {
       id: 'summary',
       layout: { columns: { base: 1, md: 3, lg: 3 }, gap: 4 },
       widgets: [
-        { id: 'k1', type: 'kpi', title: 'Total Spend', field: 'spend', dataSourceId: 'campaigns', query: { aggregate: { spend: 'sum' } }, prefix: '$' },
-        { id: 'k2', type: 'kpi', title: 'Total Revenue', field: 'revenue', dataSourceId: 'campaigns', query: { aggregate: { revenue: 'sum' } }, prefix: '$' },
-        { id: 'k3', type: 'kpi', title: 'Total Clicks', field: 'clicks', dataSourceId: 'campaigns', query: { aggregate: { clicks: 'sum' } } }
+        { id: 'k1', type: 'kpi', precision: 0, title: 'Total Spend', field: 'spend', dataSourceId: 'campaigns', query: { aggregate: { spend: 'sum' } }, prefix: '$' },
+        { id: 'k2', type: 'kpi', precision: 0, title: 'Total Revenue', field: 'revenue', dataSourceId: 'campaigns', query: { aggregate: { revenue: 'sum' } }, prefix: '$' },
+        { id: 'k3', type: 'kpi', precision: 0, title: 'Total Clicks', field: 'clicks', dataSourceId: 'campaigns', query: { aggregate: { clicks: 'sum' } } }
       ]
     },
     {
@@ -441,7 +448,7 @@ export const CAMPAIGN_TEMPLATE: DashboardSpec = {
       layout: { columns: { base: 1, md: 2, lg: 2 }, gap: 6 },
       widgets: [
         { id: 'c1', type: 'chart', chartType: 'bar', title: 'ROI by Campaign', xAxis: 'name', yAxis: ['revenue', 'spend'], dataSourceId: 'campaigns' },
-        { id: 't1', type: 'table', title: 'Campaign Data', dataSourceId: 'campaigns', columns: [{ key: 'name', label: 'Campaign' }, { key: 'channel', label: 'Channel' }, { key: 'revenue', label: 'Revenue', format: 'currency' }] }
+        { id: 't1', type: 'table', pageSize: 10, title: 'Campaign Data', dataSourceId: 'campaigns', columns: [{ key: 'name', label: 'Campaign' }, { key: 'channel', label: 'Channel' }, { key: 'revenue', label: 'Revenue', format: 'currency' }] }
       ]
     }
   ]
@@ -454,7 +461,7 @@ export const SERVER_HEALTH_TEMPLATE: DashboardSpec = {
     description: 'Real-time monitoring of system resources, response times, and error rates for infrastructure.',
     author: 'DevOps'
   },
-  theme: { mode: 'dark', accent: '#22c55e', density: 'compact' },
+  theme: { mode: 'dark', accent: '#3b82f6', density: 'compact' },
   dataSources: [
     {
       id: 'servers',
@@ -478,6 +485,7 @@ export const SERVER_HEALTH_TEMPLATE: DashboardSpec = {
       ]
     }
   ],
+  filters: [],
   sections: [
     {
       id: 'alerts',
@@ -490,9 +498,9 @@ export const SERVER_HEALTH_TEMPLATE: DashboardSpec = {
       id: 'overview',
       layout: { columns: { base: 1, md: 3, lg: 3 }, gap: 4 },
       widgets: [
-        { id: 'k1', type: 'kpi', title: 'Avg CPU Load', field: 'cpu', dataSourceId: 'servers', query: { aggregate: { cpu: 'avg' } }, suffix: '%' },
-        { id: 'k2', type: 'kpi', title: 'Total Requests', field: 'requests', dataSourceId: 'metrics', query: { aggregate: { requests: 'sum' } } },
-        { id: 'k3', type: 'kpi', title: 'Error Rate', field: 'errors', dataSourceId: 'metrics', query: { aggregate: { errors: 'avg' } }, precision: 1 }
+        { id: 'k1', type: 'kpi', precision: 0, title: 'Avg CPU Load', field: 'cpu', dataSourceId: 'servers', query: { aggregate: { cpu: 'avg' } }, suffix: '%' },
+        { id: 'k2', type: 'kpi', precision: 0, title: 'Total Requests', field: 'requests', dataSourceId: 'metrics', query: { aggregate: { requests: 'sum' } } },
+        { id: 'k3', type: 'kpi', precision: 1, title: 'Error Rate', field: 'errors', dataSourceId: 'metrics', query: { aggregate: { errors: 'avg' } } }
       ]
     },
     {
@@ -500,7 +508,59 @@ export const SERVER_HEALTH_TEMPLATE: DashboardSpec = {
       layout: { columns: { base: 1, md: 2, lg: 2 }, gap: 6 },
       widgets: [
         { id: 'c1', type: 'chart', chartType: 'bar', title: 'Resource Usage by Host', xAxis: 'host', yAxis: ['cpu', 'memory'], dataSourceId: 'servers' },
-        { id: 'c2', type: 'chart', chartType: 'line', title: 'Request Volume', xAxis: 'time', yAxis: ['requests'], dataSourceId: 'metrics', accent: '#22c55e' }
+        { id: 'c2', type: 'chart', chartType: 'line', title: 'Request Volume', xAxis: 'time', yAxis: ['requests'], dataSourceId: 'metrics' }
+      ]
+    }
+  ]
+};
+
+export const PROJECT_ROADMAP_TEMPLATE: DashboardSpec = {
+  version: '1.0',
+  meta: {
+    title: 'Product Roadmap 2024',
+    description: 'Strategic product milestones, release schedule, and key feature development timeline.',
+    author: 'Product Management'
+  },
+  theme: { mode: 'light', accent: '#8b5cf6', density: 'cozy' },
+  dataSources: [
+    {
+      id: 'milestones',
+      type: 'inline',
+      data: [
+        { date: '2024-01-15', title: 'Q1 Kickoff', desc: 'Annual strategy alignment and team goal setting.' },
+        { date: '2024-02-01', title: 'Beta V1.0', desc: 'Initial beta release for early access users.' },
+        { date: '2024-03-10', title: 'Security Audit', desc: 'External security review and penetration testing.' },
+        { date: '2024-04-20', title: 'Public Launch', desc: 'Global rollout and marketing campaign start.' },
+        { date: '2024-06-15', title: 'Mobile App', desc: 'iOS and Android application release.' }
+      ]
+    },
+    {
+      id: 'stats',
+      type: 'inline',
+      data: [
+        { category: 'Completed', count: 12 },
+        { category: 'In Progress', count: 8 },
+        { category: 'Planned', count: 15 }
+      ]
+    }
+  ],
+  filters: [],
+  sections: [
+    {
+      id: 'overview',
+      layout: { columns: { base: 1, md: 3, lg: 3 }, gap: 4 },
+      widgets: [
+        { id: 'k1', type: 'kpi', precision: 0, title: 'Total Milestones', field: 'title', dataSourceId: 'milestones', query: { aggregate: { title: 'count' } } },
+        { id: 'k2', type: 'kpi', precision: 0, title: 'Days to Launch', field: 'days', dataSourceId: 'stats', query: { aggregate: { days: 'sum' } }, prefix: 'T-' },
+        { id: 'k3', type: 'kpi', precision: 0, title: 'Team Velocity', field: 'count', dataSourceId: 'stats', query: { where: { category: 'Completed' } }, suffix: ' pts' }
+      ]
+    },
+    {
+      id: 'roadmap',
+      title: 'Strategic Timeline',
+      layout: { columns: { base: 1, md: 1, lg: 1 }, gap: 6 },
+      widgets: [
+        { id: 'tm1', type: 'timeline', titleField: 'title', descriptionField: 'desc', dateField: 'date', dataSourceId: 'milestones', title: 'Key Milestones' }
       ]
     }
   ]
@@ -512,6 +572,7 @@ export const TEMPLATES = [
   { id: 'social', title: 'Social Media', description: 'Reach, impressions, and follower engagement metrics.', spec: SOCIAL_MEDIA_TEMPLATE, icon: '📱', category: 'Marketing' },
   { id: 'campaign', title: 'Marketing Campaigns', description: 'Track ROI and performance across ad channels.', spec: CAMPAIGN_TEMPLATE, icon: '📣', category: 'Marketing' },
   { id: 'pm', title: 'Project Status', description: 'Timeline tracking and engineering velocity.', spec: PROJECT_MGMT_TEMPLATE, icon: '📅', category: 'Operations' },
+  { id: 'roadmap', title: 'Product Roadmap', description: 'Strategic milestones and release timeline.', spec: PROJECT_ROADMAP_TEMPLATE, icon: '🗺️', category: 'Product' },
   { id: 'inventory', title: 'Inventory Logic', description: 'Stock levels, warehouse movements and low stock alerts.', spec: INVENTORY_TEMPLATE, icon: '📦', category: 'Logistics' },
   { id: 'support', title: 'Support Ops', description: 'Ticket volume and customer satisfaction monitoring.', spec: SUPPORT_OPS_TEMPLATE, icon: '🎧', category: 'Operations' },
   { id: 'server', title: 'Server Health', description: 'Real-time infrastructure and resource monitoring.', spec: SERVER_HEALTH_TEMPLATE, icon: '🖥️', category: 'DevOps' },

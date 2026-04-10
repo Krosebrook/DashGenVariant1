@@ -5,7 +5,7 @@ export const DataSourceSchema = z.discriminatedUnion('type', [
   z.object({
     id: z.string(),
     type: z.literal('inline'),
-    data: z.array(z.record(z.any())),
+    data: z.array(z.record(z.string(), z.any())),
   }),
   z.object({
     id: z.string(),
@@ -18,13 +18,26 @@ export const DataSourceSchema = z.discriminatedUnion('type', [
     url: z.string().optional(),
     content: z.string().optional(),
   }),
+  z.object({
+    id: z.string(),
+    type: z.literal('postgres'),
+    connectionString: z.string(),
+    query: z.string(),
+  }),
+  z.object({
+    id: z.string(),
+    type: z.literal('mongodb'),
+    connectionString: z.string(),
+    collection: z.string(),
+    query: z.string().optional(), // JSON string for the query
+  }),
 ]);
 
 export const QuerySchema = z.object({
   select: z.array(z.string()).optional(),
-  where: z.record(z.any()).optional(),
+  where: z.record(z.string(), z.any()).optional(),
   groupBy: z.string().optional(),
-  aggregate: z.record(z.enum(['sum', 'avg', 'count', 'min', 'max'])).optional(),
+  aggregate: z.record(z.string(), z.enum(['sum', 'avg', 'count', 'min', 'max'])).optional(),
   orderBy: z.string().optional(),
   order: z.enum(['asc', 'desc']).optional(),
   limit: z.number().optional(),
@@ -50,9 +63,11 @@ export const KPIWidgetSchema = BaseWidgetSchema.extend({
 
 export const ChartWidgetSchema = BaseWidgetSchema.extend({
   type: z.literal('chart'),
-  chartType: z.enum(['line', 'bar', 'area', 'pie']),
+  chartType: z.enum(['line', 'bar', 'area', 'pie', 'scatter']),
   xAxis: z.string(),
   yAxis: z.array(z.string()),
+  xAxisLabel: z.string().optional(),
+  yAxisLabel: z.string().optional(),
   colors: z.array(z.string()).optional(),
   stacked: z.boolean().optional(),
 });

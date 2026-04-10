@@ -9,7 +9,7 @@ import { TimelineWidget } from './Widgets/TimelineWidget';
 import { Widget } from '../types';
 
 export const DashboardRenderer: React.FC = () => {
-  const { spec, activeFilters, dataCache, isLoading } = useDashboardStore();
+  const { spec, activeFilters, dataCache, isLoading, errors } = useDashboardStore();
 
   const getWidgetData = (widget: any) => {
     const data = dataCache[widget.dataSourceId] || [];
@@ -48,12 +48,24 @@ export const DashboardRenderer: React.FC = () => {
           body: 'text-slate-600 leading-relaxed',
         };
         return <div key={widget.id} className={`${variantStyles[widget.variant || 'body']} col-span-full`}>{widget.content}</div>;
-      default: return <div key={widget.id}>Unsupported Widget</div>;
+      default: return <div key={(widget as any).id}>Unsupported Widget</div>;
     }
   };
 
+  const hasErrors = Object.keys(errors || {}).length > 0;
+
   return (
     <div className="dashboard-container space-y-16 pb-20">
+      {hasErrors && (
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+          <h3 className="text-red-800 font-bold mb-2">Data Source Errors</h3>
+          <ul className="list-disc pl-5 text-sm text-red-600">
+            {Object.entries(errors).map(([id, msg]) => (
+              <li key={id}><strong>{id}:</strong> {msg}</li>
+            ))}
+          </ul>
+        </div>
+      )}
       {spec.sections.map((section) => (
         <section key={section.id}>
           {(section.title || section.description) && (

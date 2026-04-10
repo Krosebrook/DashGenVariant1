@@ -107,27 +107,60 @@ export async function resolveDataSource(ds: DataSource): Promise<any[]> {
   if (ds.type === 'csv') {
     if (ds.content) return parseCSV(ds.content);
     if (ds.url) {
-      try {
-        const resp = await fetch(ds.url);
-        if (!resp.ok) throw new Error(`CSV fetch failed: ${resp.statusText}`);
-        const text = await resp.text();
-        return parseCSV(text);
-      } catch (e) {
-        console.error(`Failed to load CSV source ${ds.id}`, e);
-        return [];
-      }
+      const resp = await fetch(ds.url);
+      if (!resp.ok) throw new Error(`CSV fetch failed: ${resp.statusText}`);
+      const text = await resp.text();
+      return parseCSV(text);
     }
   }
 
   if (ds.type === 'api') {
-    try {
-      const resp = await fetch(ds.url);
-      if (!resp.ok) throw new Error(`API fetch failed: ${resp.statusText}`);
-      return await resp.json();
-    } catch (e) {
-      console.error(`Failed to load API source ${ds.id}`, e);
-      return [];
+    const resp = await fetch(ds.url);
+    if (!resp.ok) throw new Error(`API fetch failed: ${resp.statusText}`);
+    return await resp.json();
+  }
+
+  if (ds.type === 'postgres') {
+    const token = localStorage.getItem('token');
+    const resp = await fetch('/api/data/postgres', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+      },
+      body: JSON.stringify({
+        connectionString: ds.connectionString,
+        query: ds.query
+      })
+    });
+    
+    if (!resp.ok) {
+      const errorData = await resp.json().catch(() => ({}));
+      throw new Error(errorData.error || `Postgres fetch failed: ${resp.statusText}`);
     }
+    return await resp.json();
+  }
+
+  if (ds.type === 'mongodb') {
+    const token = localStorage.getItem('token');
+    const resp = await fetch('/api/data/mongodb', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+      },
+      body: JSON.stringify({
+        connectionString: ds.connectionString,
+        collection: ds.collection,
+        query: ds.query
+      })
+    });
+    
+    if (!resp.ok) {
+      const errorData = await resp.json().catch(() => ({}));
+      throw new Error(errorData.error || `MongoDB fetch failed: ${resp.statusText}`);
+    }
+    return await resp.json();
   }
 
   return [];
