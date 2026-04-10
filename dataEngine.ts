@@ -84,8 +84,16 @@ export function executeQuery(data: any[], query?: Query, filters: Record<string,
   // 4. Order By
   if (query?.orderBy) {
     result.sort((a, b) => {
-      const valA = a[query.orderBy!];
-      const valB = b[query.orderBy!];
+      let valA = a[query.orderBy!];
+      let valB = b[query.orderBy!];
+
+      // Handle date sorting if values are valid date strings
+      if (typeof valA === 'string' && isNaN(Number(valA)) && !isNaN(Date.parse(valA))) {
+        valA = new Date(valA).getTime();
+        valB = new Date(valB).getTime();
+      }
+
+      if (valA === valB) return 0;
       return query.order === 'desc' ? (valA > valB ? -1 : 1) : (valA > valB ? 1 : -1);
     });
   }
@@ -115,9 +123,37 @@ export async function resolveDataSource(ds: DataSource): Promise<any[]> {
   }
 
   if (ds.type === 'api') {
-    const resp = await fetch(ds.url);
-    if (!resp.ok) throw new Error(`API fetch failed: ${resp.statusText}`);
-    return await resp.json();
+    try {
+      const resp = await fetch(ds.url);
+      if (!resp.ok) {
+        throw new Error(`API fetch failed: ${resp.status} ${resp.statusText}`);
+      }
+      
+      const text = await resp.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        throw new Error(`Invalid JSON response from API`);
+      }
+
+      // Ensure we return an array of records
+      if (Array.isArray(data)) {
+        return data;
+      } else if (data && typeof data === 'object') {
+        // If the API returns an object with a data array property (common pattern)
+        if (Array.isArray(data.data)) return data.data;
+        if (Array.isArray(data.items)) return data.items;
+        if (Array.isArray(data.results)) return data.results;
+        
+        // Otherwise wrap the single object in an array
+        return [data];
+      }
+      
+      return [];
+    } catch (err: any) {
+      throw new Error(`API Error (${ds.url}): ${err.message}`);
+    }
   }
 
   if (ds.type === 'postgres') {
